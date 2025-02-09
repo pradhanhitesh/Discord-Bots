@@ -9,17 +9,16 @@ def main():
     """Lists the user's Gmail labels using a service account."""
     creds_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 
-    # Debug: Print if the file exists
+    # Check if the credentials file exists
     if not os.path.exists(creds_path):
         raise FileNotFoundError(f"Service account file not found: {creds_path}")
 
-    # Debug: Print file contents to check if it's valid JSON (remove this in production)
+    # Open and print the JSON file contents to ensure it's valid
     with open(creds_path, "r") as f:
-        try:
-            json.load(f)  # Check if the file is valid JSON
-        except json.JSONDecodeError:
-            raise ValueError("Service account file is not valid JSON.")
+        creds_data = json.load(f)  # Load the JSON content to ensure it's valid
+        print(json.dumps(creds_data, indent=4))  # Pretty print the JSON content
 
+    # Create credentials using the service account JSON file
     creds = Credentials.from_service_account_file(creds_path, scopes=SCOPES)
 
     service = build("gmail", "v1", credentials=creds)
