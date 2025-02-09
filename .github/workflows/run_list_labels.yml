@@ -29,6 +29,7 @@ jobs:
         with:
           workload_identity_provider: 'projects/556877521071/locations/global/workloadIdentityPools/github-actions/providers/github'
           service_account: 'discord-bot@phd-alerts.iam.gserviceaccount.com'
+          token_format: 'access_token'
 
       - name: Fetch Gmail Labels
         run: python list_labels.py
