@@ -9,13 +9,10 @@ load_dotenv()
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
-secret_json = os.environ.get('MY_SECRET_JSON')
 
 def main():
-    decoded_json = base64.b64decode(secret_json).decode("utf-8")
-    data = json.loads(decoded_json)
-    print(data)
-    creds = Credentials.from_authorized_user_info(data, SCOPES)
+    secret_json = os.getenv('MY_SECRET_JSON')
+    creds = Credentials.from_authorized_user_info(json.loads(secret_json), SCOPES)
 
     try:
         service = build("gmail", "v1", credentials=creds)
