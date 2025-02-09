@@ -23,5 +23,7 @@ jobs:
       - name: Install Dependencies
         run: pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client python-dotenv
 
-      - name: Fetch Gmail Labels
-        run: python list_labels.py
+      - name: Load and use secret
+        run: |
+          echo "MY_SECRET_JSON=${{ secrets.MY_SECRET_JSON }}" >> .env
+          python my_script.py
