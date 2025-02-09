@@ -1,28 +1,37 @@
-import os
+import os.path
+import base64
 import json
+from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
-from google.auth.identity_pool import Credentials
+from googleapiclient.errors import HttpError
 
+
+# If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
+secret_json = os.environ.get("MY_SECRET_JSON")
 
 def main():
-    """Lists the user's Gmail labels using a service account."""
-    f = open(os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
-    key = json.load(f)
+    decoded_json = base64.b64decode(secret_json).decode("utf-8")
+    data = json.loads(decoded_json)
+    print(data)
+    creds = Credentials.from_authorized_user_info(data, SCOPES)
 
-    # Create credentials using the service account JSON file
-    creds = Credentials.from_info(key)
+    try:
+        service = build("gmail", "v1", credentials=creds)
+        results = service.users().labels().list(userId="me").execute()
+        labels = results.get("labels", [])
 
-    service = build("gmail", "v1", credentials=creds)
-    results = service.users().labels().list(userId="me").execute()
-    labels = results.get("labels", [])
+        if not labels:
+            print("No labels found.")
+        print("Labels:")
 
-    if not labels:
-        print("No labels found.")
-        return
-    print("Labels:")
-    for label in labels:
-        print(label["name"])
+        for label in labels:
+            print(label["name"])
+
+    except HttpError as error:
+        # TODO(developer) - Handle errors from gmail API.
+        print(f"An error occurred: {error}")
+
 
 if __name__ == "__main__":
-    main()
+  main()
