@@ -7,6 +7,7 @@ def print_gmail_labels():
     """Fetch and print Gmail labels using Workload Identity Federation."""
     try:
         creds, _ = default()  # Automatically fetch credentials from GitHub Actions
+        print(creds)
         service = build("gmail", "v1", credentials=creds)
 
         results = service.users().labels().list(userId="me").execute()
