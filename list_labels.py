@@ -4,11 +4,12 @@ import json
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-
+from dotenv import load_dotenv
+load_dotenv()
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
-secret_json = os.environ.get("MY_SECRET_JSON")
+secret_json = os.getenv("MY_SECRET_JSON")
 
 def main():
     decoded_json = base64.b64decode(secret_json).decode("utf-8")
