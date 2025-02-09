@@ -2,11 +2,17 @@ import os
 from google.auth import default
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from google.oauth2.credentials import Credentials
 
 def print_gmail_labels():
     """Fetch and print Gmail labels using Workload Identity Federation."""
+    # If modifying these scopes, delete the file token.json.
+    SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
+
     try:
-        creds, _ = default()  # Automatically fetch credentials from GitHub Actions
+        creds = Credentials.from_service_account_file(
+        os.getenv("GOOGLE_APPLICATION_CREDENTIALS"), scopes=SCOPES)
+        
         print(creds)
         service = build("gmail", "v1", credentials=creds)
 
