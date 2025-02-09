@@ -10,7 +10,7 @@ def print_gmail_labels():
     SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
 
     try:
-        creds = Credentials.from_service_account_file(
+        creds = Credentials.from_authorized_user_file(
         os.getenv("GOOGLE_APPLICATION_CREDENTIALS"), scopes=SCOPES)
         
         print(creds)
