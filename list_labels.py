@@ -1,26 +1,30 @@
 import os
-import json
+from google.auth.transport.requests import Request
+from google.auth.credentials import AnonymousCredentials
+from google.auth import impersonated_credentials
 from googleapiclient.discovery import build
-from google.oauth2.service_account import Credentials
+import requests
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
 
 def main():
-    """Lists the user's Gmail labels using a service account."""
-    creds_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+    # The token should be set as an environment variable or obtained from GitHub actions
+    id_token = os.getenv("GOOGLE_ID_TOKEN")
 
-    # Check if the credentials file exists
-    if not os.path.exists(creds_path):
-        raise FileNotFoundError(f"Service account file not found: {creds_path}")
+    if not id_token:
+        raise ValueError("Google Identity Token not found")
 
-    # Open and print the JSON file contents to ensure it's valid
-    with open(creds_path, "r") as f:
-        creds_data = json.load(f)  # Load the JSON content to ensure it's valid
-        print(json.dumps(creds_data, indent=4))  # Pretty print the JSON content
+    # Using the identity token to impersonate the service account
+    creds = impersonated_credentials.Credentials.from_authorized_user_info(
+        info={
+            "token": id_token,
+            "token_uri": "https://oauth2.googleapis.com/token",
+        },
+        target_principal="discord-bot@phd-alerts.iam.gserviceaccount.com",
+        scopes=SCOPES,
+    )
 
-    # Create credentials using the service account JSON file
-    creds = Credentials.from_service_account_file(creds_path, scopes=SCOPES)
-
+    # Using the creds to authenticate API requests
     service = build("gmail", "v1", credentials=creds)
     results = service.users().labels().list(userId="me").execute()
     labels = results.get("labels", [])
