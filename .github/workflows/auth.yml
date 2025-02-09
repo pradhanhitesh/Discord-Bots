@@ -3,6 +3,11 @@ name: Google Cloud Auth Test
 on:
   workflow_dispatch:  # Allows manual trigger
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   authenticate:
     runs-on: ubuntu-latest
