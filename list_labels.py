@@ -1,35 +1,37 @@
 import os
-from google.auth import default
+import json
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 from google.oauth2.service_account import Credentials
 
-def print_gmail_labels():
-    """Fetch and print Gmail labels using Workload Identity Federation."""
-    # If modifying these scopes, delete the file token.json.
-    SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
+SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
 
-    try:
-        creds = Credentials.from_service_account_file( 
-        os.getenv("GOOGLE_APPLICATION_CREDENTIALS"), scopes=SCOPES
-    )
-        
-        print(creds)
-        service = build("gmail", "v1", credentials=creds)
+def main():
+    """Lists the user's Gmail labels using a service account."""
+    creds_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 
-        results = service.users().labels().list(userId="me").execute()
-        labels = results.get("labels", [])
+    # Debug: Print if the file exists
+    if not os.path.exists(creds_path):
+        raise FileNotFoundError(f"Service account file not found: {creds_path}")
 
-        if not labels:
-            print("No labels found.")
-            return
+    # Debug: Print file contents to check if it's valid JSON (remove this in production)
+    with open(creds_path, "r") as f:
+        try:
+            json.load(f)  # Check if the file is valid JSON
+        except json.JSONDecodeError:
+            raise ValueError("Service account file is not valid JSON.")
 
-        print("Labels:")
-        for label in labels:
-            print(label["name"])
+    creds = Credentials.from_service_account_file(creds_path, scopes=SCOPES)
 
-    except HttpError as error:
-        print(f"An error occurred: {error}")
+    service = build("gmail", "v1", credentials=creds)
+    results = service.users().labels().list(userId="me").execute()
+    labels = results.get("labels", [])
+
+    if not labels:
+        print("No labels found.")
+        return
+    print("Labels:")
+    for label in labels:
+        print(label["name"])
 
 if __name__ == "__main__":
-    print_gmail_labels()
+    main()
