@@ -3,6 +3,8 @@ import os.path
 import json
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
+from datetime import datetime, timedelta
+import pytz
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
@@ -18,9 +20,21 @@ SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
 secret_json = os.getenv('GMAIL_TOKEN')
 creds = Credentials.from_authorized_user_info(json.loads(secret_json), SCOPES)
 
+# Get dates for query
+# Get current datetime in IST
+now_ist = datetime.now(pytz.timezone('Asia/Kolkata'))
+
+# Calculate past dates
+one_day_back = now_ist - timedelta(days=1)
+two_days_back = now_ist - timedelta(days=2)
+
+# Format dates as YYYY/MM/DD
+one_day_back_str = one_day_back.strftime("%Y/%m/%d")
+two_days_back_str = two_days_back.strftime("%Y/%m/%d")
+
 # Get messages
 service = build("gmail", "v1", credentials=creds)
-results = service.users().messages().list(userId='me', q="in:inbox is:unread after:2025/2/8 before:2025/2/9").execute()
+results = service.users().messages().list(userId='me', q=f"in:inbox is:unread after:{two_days_back_str} before:{one_day_back_str}").execute()
 messages = results.get('messages',[]);
 
 # Extract content from messages
@@ -79,7 +93,7 @@ for message in message_summary:
         summary = message_summary[message]['summary']
 
         content.append(f"### Message from {from_field}\n")
-        content.append(f"##### **Subject:** {subject}\n")
+        content.append(f"### **Subject:** {subject}\n")
         content.append(f"**Summary:** {summary}")
         to_send.append("".join(content))
 
