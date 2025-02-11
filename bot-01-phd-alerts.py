@@ -26,6 +26,11 @@ messages_data = Bot()._gmail(GMAIL_TOKEN, search_query)
 
 sys_instruct="""
 You are an AI which helps in summarizing content in 100 words.
+
+If there any links, which redirects to PhD Admission website, or 
+tells about the research lab, or tells about how to proceed ahead,
+please include that as well.
+
 Return bool if the content is of PhD/Post-Doc Advertisement/Recruitment.
 
 Use this JSON Schema:
