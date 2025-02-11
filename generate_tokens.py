@@ -1,3 +1,24 @@
+""""
+============================================================================
+Adapted from: https://developers.google.com/gmail/api/quickstart/python 
+
+The following script is used to generate tokens for GMail API authentication once
+OAuth2.0 credentials file has been generated and stored in the current working
+directory under name credentials.json
+
+Once, credentials.json file is generated and stored in the current working 
+directory, run the following script to authenticate once and then generate
+token.json file. The newly generated token.json file will be used in future 
+for authentication anytime GMail Services are used. No need for authentication
+again. 
+
+This token.json file is used as repository secret in GitHub Actions. Be sure to 
+keep it safe in the Settings > Secrets and Variables > Actions > Repository Secrets 
+
+Further reading, https://developers.google.com/gmail/api/auth/web-server
+=============================================================================
+"""
+
 import os.path
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
