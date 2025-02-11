@@ -34,6 +34,8 @@ class MIMEMessage:
                     metadata['To'] = value.get('value')
                 elif value.get('name') == 'Subject':
                     metadata['Subject'] = value.get('value')
+                elif value.get('name') == 'Date':
+                    metadata['Date'] = value.get('value')
 
             return metadata
         except Exception as e:
