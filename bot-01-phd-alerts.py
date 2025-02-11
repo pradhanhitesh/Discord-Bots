@@ -1,4 +1,5 @@
 from UTILS.bot import Bot
+from UTILS.extra import get_date_cycle
 import os.path
 from dotenv import load_dotenv
 import discord
@@ -11,8 +12,11 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 DISCORD_CHANNEL_ID = os.getenv("DISCORD_CHANNEL_ID")
 
+# Get dates
+lower_str, upper_str = get_date_cycle()
+
 # Fetch messages from GMAIL
-search_query="in:inbox is:unread after:2025/02/01 before:2025/02/09 PhD"
+search_query=f"in:inbox is:unread after:{lower_str} before:{upper_str} PhD"
 messages_data = Bot()._gmail(GMAIL_TOKEN, search_query)
 
 # Summarize messages from GMAIL
@@ -40,7 +44,7 @@ client = discord.Client(intents=intents)
 # Index to track which message to send
 message_index = 0  
 
-@tasks.loop(seconds=10)  # Runs every 5 minutes
+@tasks.loop(seconds=5)
 async def send_message():
     """Sends the next message in the list every 5 minutes."""
     global message_index
