@@ -14,7 +14,7 @@ DISCORD_CHANNEL_ID = os.getenv("DISCORD_CHANNEL_ID")
 print(DISCORD_BOT_TOKEN, DISCORD_CHANNEL_ID)
 
 # Get dates
-lower_str, upper_str = get_date_cycle(lower_range=5)
+lower_str, upper_str = get_date_cycle()
 
 # Fetch messages from GMAIL
 search_query=f"in:inbox is:unread after:{lower_str} before:{upper_str} PhD"

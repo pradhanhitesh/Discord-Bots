@@ -1,6 +1,8 @@
 name: Fetch PhD Advertisement Mails
 
 on:
+  schedule:
+    - cron: "30 4 */7 * *" # At 04:30 UTC on every 7th day-of-month.
   workflow_dispatch:
 
 permissions:
