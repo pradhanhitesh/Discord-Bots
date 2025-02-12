@@ -11,7 +11,6 @@ GMAIL_TOKEN = os.getenv('GMAIL_TOKEN')
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 DISCORD_CHANNEL_ID = os.getenv("DISCORD_CHANNEL_ID")
-print(DISCORD_BOT_TOKEN, DISCORD_CHANNEL_ID)
 
 # Get dates
 lower_str, upper_str = get_date_cycle()
