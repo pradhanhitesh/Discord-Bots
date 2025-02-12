@@ -6,14 +6,15 @@ import discord
 from discord.ext import tasks
 
 # Load SECRET variables
-load_dotenv()
+load_dotenv(override=True)
 GMAIL_TOKEN = os.getenv('GMAIL_TOKEN')
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 DISCORD_CHANNEL_ID = os.getenv("DISCORD_CHANNEL_ID")
+print(DISCORD_BOT_TOKEN, DISCORD_CHANNEL_ID)
 
 # Get dates
-lower_str, upper_str = get_date_cycle()
+lower_str, upper_str = get_date_cycle(lower_range=5)
 
 # Fetch messages from GMAIL
 search_query=f"in:inbox is:unread after:{lower_str} before:{upper_str} PhD"
@@ -49,7 +50,7 @@ client = discord.Client(intents=intents)
 # Index to track which message to send
 message_index = 0  
 
-@tasks.loop(seconds=5)
+@tasks.loop(seconds=1)
 async def send_message():
     """Sends the next message in the list every 5 minutes."""
     global message_index

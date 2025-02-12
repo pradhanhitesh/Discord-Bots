@@ -71,16 +71,17 @@ class Bot():
         # List of messages to send
         to_send = []
         for message in message_summary:
-            content = [f"# Message ID: {message}\n"]
+            # content = [f"# Message ID: {message}\n"]
             if message_summary[message]['condition']:
                 from_field = messages_data[message]['metadata']['From']
                 subject = messages_data[message]['metadata']['Subject']
                 date = messages_data[message]['metadata']['Date']
                 summary = message_summary[message]['summary']
 
-                content.append(f"### Message from {from_field}\n")
-                content.append(f"### **Subject:** {subject}\n")
+                content = []
+                content.append(f"### 📝 **Subject:** {subject}\n")
                 content.append(f"### **Date:** {date}\n")
+                content.append(f"### Message from {from_field}\n")
                 content.append(f"**Summary:** {summary}")
                 to_send.append("".join(content))
 
