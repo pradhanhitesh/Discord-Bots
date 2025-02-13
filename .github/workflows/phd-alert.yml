@@ -10,7 +10,7 @@ permissions:
   id-token: write
 
 jobs:
-  fetch-labels:
+  phd-alerts:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,9 +27,9 @@ jobs:
 
       - name: Run main.py
         env: 
-          GMAIL_TOKEN: ${{ secrets.GMAIL_STU_TOKEN }}
+          GMAIL_STU_TOKEN: ${{ secrets.GMAIL_STU_TOKEN }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-          DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_PHD_ID }}
+          DISCORD_PHD_ID: ${{ secrets.DISCORD_PHD_ID }}
         run:
           python bot-01-phd-alerts.py
