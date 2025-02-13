@@ -1,11 +1,12 @@
 from UTILS.oped import Oped
-from UTILS.extra import delete_data
+from UTILS.extra import delete_data, save_historical_oped, load_historical_oped
 from bs4 import BeautifulSoup
 import requests
 import os.path
 from dotenv import load_dotenv
 import discord
 from discord.ext import tasks
+import hashlib
 
 # Load SECRET variables
 load_dotenv(override=True)
@@ -26,24 +27,35 @@ if response.status_code == 200:
     ece_links = [a['href'] for a in soup.find_all('a', href=True) if a['href'].endswith('.ece')]
     ece_links = list(set([x for x in ece_links if 'op-ed' in x]))
 
+# Load historical data
+historial_oped = load_historical_oped("DATA/historical_oped.json")
+
+# Start collecting data
 to_send_message = []
 to_send_attch = []
-for link in ece_links:
-    # Send an HTTP request to get the HTML content
-    response = requests.get(link)
-    print(link)
+to_save = []
+for link in ece_links[:2]:
+    hashed_link = hashlib.sha256(link.encode()).hexdigest()
+    if hashed_link not in historial_oped:
+        print(f"Collecting data for link {link}")
 
-    # Check if request was successful
-    if response.status_code == 200:
-        # Parse the HTML content
-        soup = BeautifulSoup(response.text, 'html.parser')
-        page_data = Oped()._process_page(soup, GEMINI_API_KEY, output_path='DATA', output_md=True)
-        message, pdf_path = Oped()._message(page_data, 
-                                            template_path="template/article.html", output_path="DATA")
-        to_send_message.append(message)
-        to_send_attch.append(pdf_path)
+        # Send an HTTP request to get the HTML content
+        response = requests.get(link)
+
+        # Check if request was successful
+        if response.status_code == 200:
+            # Parse the HTML content
+            soup = BeautifulSoup(response.text, 'html.parser')
+            page_data = Oped()._process_page(soup, GEMINI_API_KEY, output_path='DATA', output_md=True)
+            message, pdf_path = Oped()._message(page_data, 
+                                                template_path="template/article.html", output_path="DATA")
+            to_send_message.append(message)
+            to_send_attch.append(pdf_path)
+            to_save.append(hashlib.sha256(link.encode()).hexdigest())
+        else:
+            continue
     else:
-        continue
+        print(f"Skipping link {link}")
 
 # Discord setup
 intents = discord.Intents.default()
@@ -58,7 +70,6 @@ async def send_message():
     global message_index
     channel = client.get_channel(int(DISCORD_CHANNEL_ID))
     
-    # TODO Fix "In content: Must be 2000 or fewer in length."
     if channel and message_index < len(to_send_message):
         file = discord.File(to_send_attch[message_index])
         await channel.send(to_send_message[message_index], file=file)
@@ -78,6 +89,9 @@ async def on_ready():
         await client.close()  # Close immediately if no messages exist
 
 client.run(DISCORD_BOT_TOKEN)
+
+# Store the hashed links with time
+save_historical_oped("DATA/historical_oped.json", to_save)
 
 # Remove files from DATA
 delete_data()
