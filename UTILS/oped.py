@@ -57,14 +57,14 @@ class Oped():
         config=types.GenerateContentConfig(
             system_instruction=sys_instruct),
             contents=[content])
-
+        
         if "```json" in response.text:
             # Clean the response by removing the code block markers
             response_content_cleaned = response.text.replace("```json", "").replace("```", "").strip()
-            response_json = json.loads(response_content_cleaned)
+            response_json = json.loads(response_content_cleaned, strict=False)
         else:
             # Parse the response content back to a Python dictionary
-            response_json = json.loads(response.text)
+            response_json = json.loads(response.text, strict=False)
 
         return response_json
     
