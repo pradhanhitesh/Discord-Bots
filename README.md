@@ -4,7 +4,7 @@ Discord-Gmail-Bot is an automation tool that retrieves messages from Gmail accou
 
 Currently, the bots are performining following actions:  
 ✅ PhD-Alerts: Collecting PhD Admissions messages  
-🔜 Monetary Expenses: Analyzing spending patterns from transaction history 
+✅ Op-Ed Alerts: Collecting premium Op-Ed Articles everyday 
 
 ## Requirements
 
