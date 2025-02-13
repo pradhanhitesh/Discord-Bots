@@ -55,11 +55,11 @@ class Oped():
         response = client.models.generate_content(
         model="gemini-2.0-flash",
         config=types.GenerateContentConfig(
-            system_instruction=sys_instruct,
-            max_output_tokens=500,
-            temperature=0.7),
-            contents=[content],)
-            
+            system_instruction=sys_instruct),
+            contents=[content])
+        print(response.candidates[0].content.parts[0])
+        print(response.text)
+
         if "```json" in response.text:
             # Clean the response by removing the code block markers
             response_content_cleaned = response.text.replace("```json", "").replace("```", "").strip()
@@ -95,13 +95,16 @@ class Oped():
 
         # Summarize content
         sys_instruct="""
-        You are an AI which helps in summarizing content.
-        It is very important that you summarize in just 500 words.
-        Based on user input, make sure to keep the essence of Op-Ed News Article.
+        Here are your strict instructions:
+        You are an AI specializing in summarizing content, particularly Op-Ed news articles.  
+        Your task is to condense the provided text into a concise and informative summary of exactly 100 words.  
+        Focus on capturing the key arguments, main points, and essential details of the original article while preserving its core essence.  Avoid adding any personal opinions or interpretations.  
+        Maintain the original meaning and tone of the source material.
 
-        Use this JSON Schema:
-        Content = {'summary': str}
-        Return: Content
+        Use this JSON schema:
+        Summary = {'summary': str}
+        Return: dict[Summary]
+
         """
         content = self._llm(GEMINI_API_KEY, body_content, sys_instruct)
 
@@ -138,7 +141,6 @@ class Oped():
         except Exception as e:
             raise ValueError(f"Could not extract page data due to {e}")
         
-
     def _message(self, page_data: dict, template_path: str, output_path: str):
         message_content = []
 
@@ -147,6 +149,8 @@ class Oped():
             message_content.append(f"### **{meta}:** {page_data['Metadata'][meta]}\n")
         message_content.append(f"**Summary:** {page_data['Content']['Summary']}")
         message_content = "".join(content for content in message_content)
+        print(message_content)
+        print(len(page_data['Content']['Summary']))
 
         # PDF file
         template_vars = {
