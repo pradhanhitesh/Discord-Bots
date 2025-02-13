@@ -57,8 +57,6 @@ class Oped():
         config=types.GenerateContentConfig(
             system_instruction=sys_instruct),
             contents=[content])
-        print(response.candidates[0].content.parts[0])
-        print(response.text)
 
         if "```json" in response.text:
             # Clean the response by removing the code block markers
@@ -149,8 +147,6 @@ class Oped():
             message_content.append(f"### **{meta}:** {page_data['Metadata'][meta]}\n")
         message_content.append(f"**Summary:** {page_data['Content']['Summary']}")
         message_content = "".join(content for content in message_content)
-        print(message_content)
-        print(len(page_data['Content']['Summary']))
 
         # PDF file
         template_vars = {

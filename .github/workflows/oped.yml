@@ -32,3 +32,11 @@ jobs:
           DISCORD_OPED_ID: ${{ secrets.DISCORD_OPED_ID }}
         run:
           python bot-02-oped.py
+
+      - name: commit files
+        run:
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add DATA/historical_oped.json
+          git commit -m "Auto update README"
+          git push 
