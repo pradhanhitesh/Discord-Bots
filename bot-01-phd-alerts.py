@@ -7,10 +7,10 @@ from discord.ext import tasks
 
 # Load SECRET variables
 load_dotenv(override=True)
-GMAIL_TOKEN = os.getenv('GMAIL_TOKEN')
+GMAIL_TOKEN = os.getenv('GMAIL_STU_TOKEN')
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
-DISCORD_CHANNEL_ID = os.getenv("DISCORD_CHANNEL_ID")
+DISCORD_CHANNEL_ID = os.getenv("DISCORD_PHD_ID")
 
 # Get dates
 lower_str, upper_str = get_date_cycle()
