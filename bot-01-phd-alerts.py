@@ -7,17 +7,17 @@ from discord.ext import tasks
 
 # Load SECRET variables
 load_dotenv(override=True)
-GMAIL_STU_TOKEN = os.getenv("GMAIL_STU_TOKEN")
+GMAIL_TOKEN = os.getenv("GMAIL_STU_TOKEN")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
-DISCORD_PHD_ID = os.getenv("DISCORD_PHD_ID")
+DISCORD_CHANNEL_ID = os.getenv("DISCORD_PHD_ID")
 
 # Get dates
 lower_str, upper_str = get_date_cycle()
 
 # Fetch messages from GMAIL
 search_query=f"in:inbox is:unread after:{lower_str} before:{upper_str} PhD"
-messages_data = Bot()._gmail(GMAIL_STU_TOKEN, search_query)
+messages_data = Bot()._gmail(GMAIL_TOKEN, search_query)
 
 # Summarize messages from GMAIL
 # Do not modify the JSON scheme key 'condition'
@@ -53,7 +53,7 @@ message_index = 0
 async def send_message():
     """Sends the next message in the list every 5 minutes."""
     global message_index
-    channel = client.get_channel(int(DISCORD_PHD_ID))
+    channel = client.get_channel(int(DISCORD_CHANNEL_ID))
     
     if channel and message_index < len(to_send):
         await channel.send(to_send[message_index])
