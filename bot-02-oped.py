@@ -34,7 +34,7 @@ historial_oped = load_historical_oped("DATA/historical_oped.json")
 to_send_message = []
 to_send_attch = []
 to_save = []
-for link in ece_links[:2]:
+for link in ece_links:
     hashed_link = hashlib.sha256(link.encode()).hexdigest()
     if hashed_link not in historial_oped:
         print(f"Collecting data for link {link}")
