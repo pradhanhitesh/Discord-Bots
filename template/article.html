@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpEd</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content {
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <h1>{{ headline }}</h1>
+        <p style="font-size: 20px;">{{ publication_date }}, {{ publication_time }} | Generated on: {{ generation_date }} IST</p>
+        <hr>
+        <p style="text-align: justify;"><b>TL;DR:</b> {{ summary }} </p>
+        <hr>
+        <p style="text-align: justify;">
+            {{ original }}
+        </p>        
+    </div>
+</body>
+
+</html>
