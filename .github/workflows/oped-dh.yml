@@ -2,7 +2,7 @@ name: Fetch OpEd articles
 
 on:
   schedule:
-    - cron: "30 2 * * *" # At 02:30 UTC on everyday
+    - cron: "45 2 * * *" # At 02:45 UTC on everyday
   workflow_dispatch:
 
 permissions:
@@ -33,7 +33,7 @@ jobs:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           DISCORD_OPED_ID: ${{ secrets.DISCORD_OPED_ID }}
         run:
-          python bot-02-oped.py
+          python bot-03-oped-dh.py
 
       - name: Commit and Push Changes
         run: |
