@@ -1,4 +1,4 @@
-from UTILS.bot import Bot
+from UTILS.bot import PhDBot
 from UTILS.extra import get_date_cycle
 import os.path
 from dotenv import load_dotenv
@@ -17,11 +17,11 @@ lower_str, upper_str = get_date_cycle()
 
 # Fetch messages from GMAIL
 search_query=f"in:inbox is:unread after:{lower_str} before:{upper_str} PhD"
-messages_data = Bot()._gmail(GMAIL_TOKEN, search_query)
+messages_data = PhDBot()._gmail(GMAIL_TOKEN, search_query)
 
 # Summarize messages from GMAIL
 # Do not modify the JSON scheme key 'condition'
-# The key is used to determine "to_send" condition in Bot()._message()
+# The key is used to determine "to_send" condition in PhDBot()._message()
 # Make sure to change the condition for Return bool if .... 
 
 sys_instruct="""
@@ -37,10 +37,10 @@ Use this JSON Schema:
 Content = {'condition': bool, 'summary': str}
 Return: Content
 """
-messages_summary = Bot()._llm(GEMINI_API_KEY, messages_data, sys_instruct)
+messages_summary = PhDBot()._llm(GEMINI_API_KEY, messages_data, sys_instruct)
 
 # Filter messages which needs to be sent via Discord
-to_send = Bot()._message(messages_data, messages_summary)
+to_send = PhDBot()._message(messages_data, messages_summary)
 
 # Discord setup
 intents = discord.Intents.default()
