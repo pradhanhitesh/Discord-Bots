@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpEd</title>
+    <title>OpEd | {{ headline }}</title>
     <style>
         @page {
             size: A4;
@@ -29,11 +29,13 @@
 <body>
     <div class="content">
         <h1>{{ headline }}</h1>
-        <p style="font-size: 20px;">{{ publication_date }}, {{ publication_time }} | Generated on: {{ generation_date }} IST</p>
+        <p style="font-size: 16px;">{{ publication_date }}, {{ publication_time }} | Generated on: {{ generation_date }} IST</p>
         <hr>
-        <p style="text-align: justify;"><b>TL;DR:</b> {{ summary }} </p>
+        <p style="text-align: justify; column-count: 2; column-gap: 30px;"><b>TL;DR:</b> 
+            {{ summary }}
+        </p>
         <hr>
-        <p style="text-align: justify;">
+        <p style="text-align: justify; column-count: 2; column-gap: 30px;">
             {{ original }}
         </p>        
     </div>
