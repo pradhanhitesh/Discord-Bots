@@ -10,7 +10,7 @@ permissions:
   pages: write
 
 jobs:
-  oped-alerts:
+  art-th-alerts:
     runs-on: ubuntu-latest
 
     steps:
@@ -40,4 +40,4 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add DATA/historical_art_th.json
-          git diff --staged --quiet || (git commit -m "Auto update historical_oped.json" && git push) 
+          git diff --staged --quiet || (git commit -m "Auto update historical_art_th.json" && git push) 
