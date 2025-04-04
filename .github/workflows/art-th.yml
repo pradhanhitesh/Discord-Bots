@@ -1,0 +1,43 @@
+name: Fetch TH articles
+
+on:
+  schedule:
+    - cron: "0 */6 * * *" # Every 6 hours 
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  oped-alerts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run bot-04-art-th.py
+        env: 
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_ART_TH_ID: ${{ secrets.DISCORD_ART_TH_ID }}
+        run:
+          python bot-04-art-th.py
+
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add DATA/historical_art_th.json
+          git diff --staged --quiet || (git commit -m "Auto update historical_oped.json" && git push) 
