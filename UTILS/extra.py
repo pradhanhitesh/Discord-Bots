@@ -32,14 +32,14 @@ def delete_data(dir_path="DATA", keep_file="historical_oped.json"):
         except Exception as e:
             print(f"Error deleting {file_path}: {e}")
 
-def load_historical_oped(file_path: str):
+def load_historical(file_path: str):
     with open(file_path, "r") as file:
         data = json.load(file)
     
     hash_lib = [item for value in data.values() if isinstance(value, list) for item in value]
     return hash_lib
 
-def save_historical_oped(file_path: str, to_save: list):
+def save_historical(file_path: str, to_save: list):
     # Open and read the JSON file
     with open(file_path, "r") as file:
         data = json.load(file)

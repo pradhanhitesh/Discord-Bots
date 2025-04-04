@@ -1,5 +1,5 @@
 from UTILS.bot import OpedTH
-from UTILS.extra import delete_data, save_historical_oped, load_historical_oped
+from UTILS.extra import delete_data, save_historical, load_historical
 from bs4 import BeautifulSoup
 import requests
 import os.path
@@ -28,7 +28,7 @@ if response.status_code == 200:
     ece_links = list(set([x for x in ece_links if 'op-ed' in x]))
 
 # Load historical data
-historial_oped = load_historical_oped("DATA/historical_oped.json")
+historial_oped = load_historical("DATA/historical_oped.json")
 
 # Start collecting data
 to_send_message = []
@@ -91,7 +91,7 @@ async def on_ready():
 client.run(DISCORD_BOT_TOKEN)
 
 # Store the hashed links with time
-save_historical_oped("DATA/historical_oped.json", to_save)
+save_historical("DATA/historical_oped.json", to_save)
 
 # Remove files from DATA
 delete_data()
