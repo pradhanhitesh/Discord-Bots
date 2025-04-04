@@ -228,14 +228,18 @@ class OpedTH:
         except Exception as e:
             raise ValueError(f"Could not extract page data due to {e}")
         
-    def _message(self, page_data: dict, template_path: str, output_path: str):
+    def _message(self, page_data: dict, template_path: str, output_path: str, summary=True):
         message_content = []
 
         # MD message
         for meta in page_data['Metadata']:
             message_content.append(f"### **{meta}:** {page_data['Metadata'][meta]}\n")
-        message_content.append(f"**Summary:** {page_data['Content']['Summary']}")
-        message_content = "".join(content for content in message_content)
+        
+        if summary:
+            message_content.append(f"**Summary:** {page_data['Content']['Summary']}")
+            message_content = "".join(content for content in message_content)
+        else:
+            message_content = "".join(content for content in message_content)
 
         # PDF file
         template_vars = {

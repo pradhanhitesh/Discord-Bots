@@ -15,13 +15,13 @@ def get_date_cycle(upper_range = 1, lower_range=8):
 
     return lower_str, upper_str
 
-def delete_data(dir_path="DATA", keep_file="historical_oped.json"):
+def delete_data(dir_path="DATA", keep_file=["historical_oped.json", "historical_art_th.json"]):
     # Iterate through all files and directories in the given path
     for filename in os.listdir(dir_path):
         file_path = os.path.join(dir_path, filename)
         
         # Skip the file that needs to be preserved
-        if filename == keep_file:
+        if filename in keep_file:
             continue  # Don't delete this file
         
         try:
