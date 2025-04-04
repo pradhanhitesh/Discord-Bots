@@ -155,7 +155,7 @@ class OpedTH:
 
         return response_json
     
-    def _extract_paragraph(self, soup, GEMINI_API_KEY: str):
+    def _extract_paragraph(self, soup, GEMINI_API_KEY: str, summarize=True):
         # Initialize list
         body_content = []
 
@@ -178,23 +178,25 @@ class OpedTH:
 
         body_content = " ".join(content for content in body_content)
 
-        # Summarize content
-        sys_instruct="""
-        Here are your strict instructions:
-        You are an AI specializing in summarizing content, particularly Op-Ed news articles.  
-        Your task is to condense the provided text into a concise and informative summary of exactly 100 words.  
-        Focus on capturing the key arguments, main points, and essential details of the original article while preserving its core essence.  Avoid adding any personal opinions or interpretations.  
-        Maintain the original meaning and tone of the source material.
+        if summarize:
+            # Summarize content
+            sys_instruct="""
+            Here are your strict instructions:
+            You are an AI specializing in summarizing content, particularly Op-Ed news articles.  
+            Your task is to condense the provided text into a concise and informative summary of exactly 100 words.  
+            Focus on capturing the key arguments, main points, and essential details of the original article while preserving its core essence.  Avoid adding any personal opinions or interpretations.  
+            Maintain the original meaning and tone of the source material.
 
-        Use this JSON schema:
-        Summary = {'summary': str}
-        Return: dict[Summary]
+            Use this JSON schema:
+            Summary = {'summary': str}
+            Return: dict[Summary]
 
-        """
-        content = self._llm(GEMINI_API_KEY, body_content, sys_instruct)
+            """
+            content = self._llm(GEMINI_API_KEY, body_content, sys_instruct)
 
-        return body_content, content['summary']
-
+            return body_content, content['summary']
+        else:
+            return body_content, "SUMMARY GENERATION TURNED OFF"
 
     def _process_page(self, soup: BeautifulSoup, GEMINI_API_KEY: str, output_path: Optional[str] = None, output_md=True):
         if output_path != None:
@@ -317,7 +319,7 @@ class OpedDH():
 
         return response_json
     
-    def _extract_paragraph(self, soup, GEMINI_API_KEY: str):
+    def _extract_paragraph(self, soup, GEMINI_API_KEY: str, summarize=True):
         json_script = soup.find_all("script", type="application/ld+json")[1]
         json_script = json.loads(json_script.string)
 
@@ -329,22 +331,25 @@ class OpedDH():
         # Extract text from all <p class="bodytext"> elements
         body_content = " ".join(p.get_text() for p in soup.find_all("p"))
 
-        # Summarize content
-        sys_instruct="""
-        Here are your strict instructions:
-        You are an AI specializing in summarizing content, particularly Op-Ed news articles.  
-        Your task is to condense the provided text into a concise and informative summary of exactly 100 words.  
-        Focus on capturing the key arguments, main points, and essential details of the original article while preserving its core essence.  Avoid adding any personal opinions or interpretations.  
-        Maintain the original meaning and tone of the source material.
+        if summarize:
+            # Summarize content
+            sys_instruct="""
+            Here are your strict instructions:
+            You are an AI specializing in summarizing content, particularly Op-Ed news articles.  
+            Your task is to condense the provided text into a concise and informative summary of exactly 100 words.  
+            Focus on capturing the key arguments, main points, and essential details of the original article while preserving its core essence.  Avoid adding any personal opinions or interpretations.  
+            Maintain the original meaning and tone of the source material.
 
-        Use this JSON schema:
-        Summary = {'summary': str}
-        Return: dict[Summary]
+            Use this JSON schema:
+            Summary = {'summary': str}
+            Return: dict[Summary]
 
-        """
-        content = self._llm(GEMINI_API_KEY, body_content, sys_instruct)
+            """
+            content = self._llm(GEMINI_API_KEY, body_content, sys_instruct)
 
-        return body_content, content['summary']
+            return body_content, content['summary']
+        else:
+            return body_content, "SUMMARY GENERATION TURNED OFF"
     
     def _process_page(self, soup: BeautifulSoup, GEMINI_API_KEY: str, output_path: Optional[str] = None, output_md=True):
         if output_path != None:
