@@ -196,16 +196,16 @@ class OpedTH:
 
             return body_content, content['summary']
         else:
-            return body_content, "SUMMARY GENERATION TURNED OFF"
+            return body_content, ""
 
-    def _process_page(self, soup: BeautifulSoup, GEMINI_API_KEY: str, output_path: Optional[str] = None, output_md=True):
+    def _process_page(self, soup: BeautifulSoup, GEMINI_API_KEY: str, output_path: Optional[str] = None, output_md=True, summarize=True):
         if output_path != None:
             if not os.path.exists(output_path):
                 raise ValueError(f"Specified path {output_path} does not exist.")
         
         # Assuming _collect_metadata and _extract_paragraph are defined elsewhere
         metadata = self._collect_metadata(soup)
-        content, summary = self._extract_paragraph(soup, GEMINI_API_KEY)
+        content, summary = self._extract_paragraph(soup, GEMINI_API_KEY, summarize=summarize)
 
         # Store data in dict
         page_data = {
@@ -349,7 +349,7 @@ class OpedDH():
 
             return body_content, content['summary']
         else:
-            return body_content, "SUMMARY GENERATION TURNED OFF"
+            return body_content, ""
     
     def _process_page(self, soup: BeautifulSoup, GEMINI_API_KEY: str, output_path: Optional[str] = None, output_md=True):
         if output_path != None:
