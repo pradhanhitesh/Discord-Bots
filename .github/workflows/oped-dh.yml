@@ -1,4 +1,4 @@
-name: Fetch OpEd articles
+name: Fetch OpEd DH articles
 
 on:
   schedule:
@@ -10,7 +10,7 @@ permissions:
   pages: write
 
 jobs:
-  oped-alerts:
+  oped-dh-alerts:
     runs-on: ubuntu-latest
 
     steps:
