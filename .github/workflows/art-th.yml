@@ -2,7 +2,7 @@ name: Fetch TH articles
 
 on:
   schedule:
-    - cron: "0 6,9,12,15,18,21 * * *" # every 3 hours between 6 AM and 9 PM every day
+    - cron: "30 0,3,6,9,12,15 * * *"  # every 3 hours from 6 AM to 9 PM IST
   workflow_dispatch:
 
 permissions:
